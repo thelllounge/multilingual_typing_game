@@ -6,7 +6,10 @@ import Words
 # Various constants that don't rely on PyGame being initialized
 SCREEN_WIDTH = 650
 SCREEN_HEIGHT = 780
-FALL_SPEED = 10
+FALL_SPEED = 25
+
+GAMES_SPEED = 1000
+TEST_SPEED = 100
 
 # General PyGame things
 pygame.init()
@@ -37,21 +40,26 @@ while running:
     # # Maybe add the word to a list of things on the screen so the screen fill doesn't just erase them.
     # # !! Updating this to use objects instead of a function like this. needs lots of work.
     # create_and_move_words.write_word(screen, words, text_font, (255, 255, 255))
-
     words_on_screen.append(Words.Word(words, SCREEN_WIDTH, text_font))
 
-    if len(words_on_screen) >= 10:
-        words_on_screen = []
+
+    # if len(words_on_screen) >= 10:
+    #     words_on_screen = []
 
 # This works. Need to think about making position part of the object.
     for word in words_on_screen:
-        print(word.position)
         screen.blit(word.wordimg, word.position)
-        word.position = (list(word.position)[0], list(word.position)[1] + FALL_SPEED)
+        # If a word hits the bottom game is over
+        # This will need to change when typing is put in the game to make room for a typing box
+        if word.position[1] >= SCREEN_HEIGHT - word.wordimg.get_height():
+            running = False
+        word.move(FALL_SPEED)
+
+
 
     pygame.display.flip()
 
-    pygame.time.wait(1000)
+    pygame.time.wait(GAMES_SPEED)
 
     clock.tick(60)
 

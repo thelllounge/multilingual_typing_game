@@ -12,3 +12,7 @@ class Word:
         self.french = self.words[1]
         self.wordimg = font.render(self.english, True, (255, 255, 255))
         self.position = (random.randint(0, screen_width - self.wordimg.get_width()), 0)
+
+    def move(self, speed):
+        # Moves words down the screen
+        self.position = (list(self.position)[0], list(self.position)[1] + speed)

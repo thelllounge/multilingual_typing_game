@@ -10,7 +10,7 @@ class Word:
         self.words = random.choice(list(vocab_list.items()))
         self.english = self.words[0]
         self.french = self.words[1]
-        self.wordimg = font.render(self.english, True, (255, 255, 255))
+        self.wordimg = font.render(self.english, True, (0, 0, 0))
         self.position = (random.randint(0, screen_width - self.wordimg.get_width()), 0)
 
     def move(self, speed):

@@ -16,6 +16,7 @@ pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 running = True
+french_background = pygame.image.load("Paris unfinished.png")
 
 # PyGame reliant constants
 text_font = pygame.font.SysFont("Arial", 30)
@@ -33,7 +34,7 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    screen.fill("black")
+    screen.blit(french_background, (0, 0))
 
     # # The function that pulls vocabulary words and puts them on the screen.
     # # Currently, it continuously goes off. I need to figure out how to make it happen at a certain speed.
@@ -41,7 +42,6 @@ while running:
     # # !! Updating this to use objects instead of a function like this. needs lots of work.
     # create_and_move_words.write_word(screen, words, text_font, (255, 255, 255))
     words_on_screen.append(Words.Word(words, SCREEN_WIDTH, text_font))
-
 
     # if len(words_on_screen) >= 10:
     #     words_on_screen = []
@@ -51,7 +51,7 @@ while running:
         screen.blit(word.wordimg, word.position)
         # If a word hits the bottom game is over
         # This will need to change when typing is put in the game to make room for a typing box
-        if word.position[1] >= SCREEN_HEIGHT - word.wordimg.get_height():
+        if word.position[1] >= 540:
             running = False
         word.move(FALL_SPEED)
 

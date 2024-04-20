@@ -10,6 +10,9 @@ FALL_SPEED = 25
 
 GAMES_SPEED = 1000
 TEST_SPEED = 100
+WORD_DROP_RATE = 5
+
+answer_text = "Place holder"
 
 # General PyGame things
 pygame.init()
@@ -36,26 +39,20 @@ while running:
 
     screen.blit(french_background, (0, 0))
 
-    # # The function that pulls vocabulary words and puts them on the screen.
-    # # Currently, it continuously goes off. I need to figure out how to make it happen at a certain speed.
-    # # Maybe add the word to a list of things on the screen so the screen fill doesn't just erase them.
-    # # !! Updating this to use objects instead of a function like this. needs lots of work.
-    # create_and_move_words.write_word(screen, words, text_font, (255, 255, 255))
-    words_on_screen.append(Words.Word(words, SCREEN_WIDTH, text_font))
+    answer_text_img = text_font.render(answer_text, True, (0, 0, 0))
+    screen.blit(answer_text_img, (110, 635))
 
-    # if len(words_on_screen) >= 10:
-    #     words_on_screen = []
+    # This pulls words from the dictionary and adds them to the list to drop.
+    if int(pygame.time.get_ticks()/1000) % WORD_DROP_RATE == 0:
+        words_on_screen.append(Words.Word(words, SCREEN_WIDTH, text_font))
 
 # This works. Need to think about making position part of the object.
     for word in words_on_screen:
         screen.blit(word.wordimg, word.position)
-        # If a word hits the bottom game is over
-        # This will need to change when typing is put in the game to make room for a typing box
+        # If a word hits the bottom of the play field game is over
         if word.position[1] >= 540:
             running = False
         word.move(FALL_SPEED)
-
-
 
     pygame.display.flip()
 

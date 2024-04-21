@@ -8,11 +8,11 @@ SCREEN_WIDTH = 650
 SCREEN_HEIGHT = 780
 FALL_SPEED = 25
 
-GAMES_SPEED = 1000
+GAME_SPEED = 1000
 TEST_SPEED = 100
-WORD_DROP_RATE = 5
+WORD_DROP_RATE = 10
 
-answer_text = "Place holder"
+answer_text = ""
 
 # General PyGame things
 pygame.init()
@@ -36,13 +36,27 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_BACKSPACE:
+                answer_text = answer_text [:-1]
+            elif event.key == pygame.K_RETURN:
+                answer_text = ""
+            else:
+
+                answer_text += event.unicode
+        for word in words_on_screen:
+            if answer_text == word.french:
+                answer_text = ""
+                words_on_screen.pop(words_on_screen.index(word))
 
     screen.blit(french_background, (0, 0))
 
+    # This puts the answer text on the screen
     answer_text_img = text_font.render(answer_text, True, (0, 0, 0))
     screen.blit(answer_text_img, (110, 635))
 
     # This pulls words from the dictionary and adds them to the list to drop.
+    # Maybe I can use pygame.time.set_timer() for this. I need to learn how that works.
     if int(pygame.time.get_ticks()/1000) % WORD_DROP_RATE == 0:
         words_on_screen.append(Words.Word(words, SCREEN_WIDTH, text_font))
 
@@ -50,13 +64,13 @@ while running:
     for word in words_on_screen:
         screen.blit(word.wordimg, word.position)
         # If a word hits the bottom of the play field game is over
-        if word.position[1] >= 540:
-            running = False
+        # if word.position[1] >= 540:
+        #     running = False
         word.move(FALL_SPEED)
 
     pygame.display.flip()
 
-    pygame.time.wait(GAMES_SPEED)
+    pygame.time.wait(GAME_SPEED)
 
     clock.tick(60)
 

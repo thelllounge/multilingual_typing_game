@@ -1,5 +1,7 @@
  {
-    "hello": "bonjour",
-    "yes": "oui",
-    "no": "non"
+   "hello": ["bonjour", "bonjour"],
+   "yes": ["oui", "oui"],
+   "no": ["non", "non"],
+   "to be": ["être", "etre"],
+   "cake": ["gâteau", "gateau"]
   }

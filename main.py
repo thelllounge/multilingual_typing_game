@@ -7,21 +7,24 @@ SCREEN_WIDTH = 650
 SCREEN_HEIGHT = 780
 FALL_SPEED = 1
 
-GAME_SPEED = 1000
-TEST_SPEED = 100
-WORD_DROP_RATE = 5
+GAME_SPEED = 4000
+TEST_SPEED = 1000
 ADD_WORD_EVENT = pygame.event.custom_type()
-
+safe_to_raise_speed = False
 
 answer_text = ""
 correct_answers = 0
+
+# Opens backgrounds
+with open("themes.json", "r") as themes_collection:
+    themes = json.load(themes_collection)
 
 # General PyGame things
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 running = True
-french_background = pygame.image.load("Paris unfinished.png")
+french_background = pygame.image.load(themes["french"]["level 1"])
 
 # PyGame reliant constants
 text_font = pygame.font.SysFont("Arial", 30)
@@ -33,22 +36,26 @@ with open("words.json", "r", encoding="utf-8") as vocabulary_list:
 # Array of words that have been created
 words_on_screen = []
 
+# TODO This needs to move when I figure out how to do a start screen
+pygame.time.set_timer(ADD_WORD_EVENT, GAME_SPEED)
+
+# TODO find a way to loop this and have a start and end screen
+# Start screen should include things like language pick, difficulty, etc.
+
 # The loop that is the game.
 while running:
-    pygame.time.set_timer(ADD_WORD_EVENT, 25)
     for event in pygame.event.get():
+        # This sees the event on a timer and adds a word to the words_on_screen array
         if event.type == ADD_WORD_EVENT:
-            print("event")
-            print(pygame.time.get_ticks())
             words_on_screen.append(Words.Word(words, SCREEN_WIDTH, text_font))
         if event.type == pygame.QUIT:
             running = False
+        # This allows you to delete letters and stops some of the keys from doing anything.
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_BACKSPACE:
                 answer_text = answer_text[:-1]
             elif event.key == pygame.K_RETURN:
                 answer_text = ""
-            # I need to figure out a way to make sure I can click buttons to do accents without fucking up the answer
             elif event.key == pygame.K_6:
                 pass
             else:
@@ -58,8 +65,21 @@ while running:
                 answer_text = ""
                 correct_answers += 1
                 words_on_screen.pop(words_on_screen.index(word))
+                GAME_SPEED -= 75
+                pygame.time.set_timer(ADD_WORD_EVENT, GAME_SPEED)
+        # Speeds up fall as game goes on
+        # TODO mess around with speed to find good levels
+        if safe_to_raise_speed and correct_answers % 15 == 0:
+            FALL_SPEED += .5
+            safe_to_raise_speed = False
+        if str(correct_answers)[-1] == "9":
+            safe_to_raise_speed = True
 
-    screen.blit(french_background, (0, 0))
+    if correct_answers < 50:
+        screen.blit(french_background, (0, 0))
+    else:
+        # TODO add correct image
+        screen.fill((255, 255, 255))
 
     # This puts the answer text on the screen
     answer_text_img = text_font.render(answer_text, True, (0, 0, 0))
@@ -67,20 +87,7 @@ while running:
     score_img = text_font.render(f"Score: {correct_answers}", True, (255, 255, 255))
     screen.blit(score_img, (SCREEN_WIDTH / 2 - score_img.get_width() / 2, 715))
 
-    # This pulls words from the dictionary and adds them to the list to drop.
-    # Maybe I can use pygame.time.set_timer() for this. I need to learn how that works.
-
-    # def add_word(array, vocabulary, width, font):
-    #     array.append(Words.Word(vocabulary, width, font))
-
-    # do_it = add_word(words_on_screen, words, SCREEN_WIDTH, text_font)
-
-
-
-    # if int(pygame.time.get_ticks()/1000) % WORD_DROP_RATE == 0:
-    #     words_on_screen.append(Words.Word(words, SCREEN_WIDTH, text_font))
-
-# This works. Need to think about making position part of the object.
+    # This works. Need to think about making position part of the object.
     for word in words_on_screen:
         screen.blit(word.word_img, word.position)
         # If a word hits the bottom of the play field game is over

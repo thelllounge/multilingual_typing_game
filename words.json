@@ -26,10 +26,9 @@
     "year": ["l'an", "an"],
     "former": ["ancien", "ancien"],
     "angel": ["un ange", "ange"],
-//    angel is 39
-   "hello": ["bonjour", "bonjour"],
-   "yes": ["oui", "oui"],
-   "no": ["non", "non"],
-   "to be": ["être", "etre"],
-   "cake": ["gâteau", "gateau"]
+    "hello": ["bonjour", "bonjour"],
+    "yes": ["oui", "oui"],
+    "no": ["non", "non"],
+    "to be": ["être", "etre"],
+     "cake": ["gâteau", "gateau"]
   }

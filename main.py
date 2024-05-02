@@ -24,7 +24,8 @@ pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 running = True
-french_background = pygame.image.load(themes["french"]["level 1"])
+end_screen = False
+french_background = pygame.image.load(themes["french"]["level 0"])
 
 # PyGame reliant constants
 text_font = pygame.font.SysFont("Arial", 30)
@@ -93,10 +94,24 @@ while running:
         # If a word hits the bottom of the play field game is over
         if word.position[1] >= 540:
             running = False
+            end_screen = True
         word.move(FALL_SPEED)
 
     pygame.display.flip()
 
     clock.tick(60)
+
+while end_screen:
+    screen.fill((0, 0, 0))
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            end_screen = False
+    final_score = text_font.render(f"Final Score:", True, (255, 255, 255))
+    score_number = text_font.render(f"{correct_answers}", True, (255, 255, 255))
+    screen.blit(final_score, (SCREEN_WIDTH / 2 - final_score.get_width() / 2, 300))
+    screen.blit(score_number, (SCREEN_WIDTH / 2 - score_number.get_width() / 2, 350))
+
+    pygame.display.flip()
 
 pygame.quit()

@@ -97,8 +97,6 @@ while running:
 
     pygame.display.flip()
 
-    # pygame.time.wait(TEST_SPEED)
-
     clock.tick(60)
 
 pygame.quit()

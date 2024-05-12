@@ -23,6 +23,7 @@ with open("themes.json", "r") as themes_collection:
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
+start_screen = True
 running = True
 end_screen = False
 french_background = pygame.image.load(themes["french"]["level 0"])
@@ -42,6 +43,21 @@ pygame.time.set_timer(ADD_WORD_EVENT, GAME_SPEED)
 
 # TODO find a way to loop this and have a start and end screen
 # Start screen should include things like language pick, difficulty, etc.
+while start_screen:
+    start_screen_text = text_font.render("Are you ready?", True, (0,0,0))
+    screen.fill((255, 255, 255))
+    screen.blit(start_screen_text, (SCREEN_WIDTH / 2 - start_screen_text.get_width() / 2, 200))
+
+    for event in pygame.event.get():
+        if event.type == pygame.MOUSEBUTTONUP:
+            start_screen = False
+        if event.type == pygame.QUIT:
+            start_screen = False
+            running = False
+
+    pygame.display.flip()
+
+    clock.tick(60)
 
 # The loop that is the game.
 while running:
@@ -102,15 +118,28 @@ while running:
     clock.tick(60)
 
 while end_screen:
-    screen.fill((0, 0, 0))
+    screen.fill((150, 150, 150))
+
+    words_start = 400
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             end_screen = False
     final_score = text_font.render(f"Final Score:", True, (255, 255, 255))
     score_number = text_font.render(f"{correct_answers}", True, (255, 255, 255))
+
     screen.blit(final_score, (SCREEN_WIDTH / 2 - final_score.get_width() / 2, 300))
     screen.blit(score_number, (SCREEN_WIDTH / 2 - score_number.get_width() / 2, 350))
+
+    current_word = 1
+
+    for word in words_on_screen:
+        word_count = len(words_on_screen)
+        screen.blit(word.word_img, (100, words_start + (word.word_img.get_height() * current_word)))
+        screen.blit(word.word_img_fre, (SCREEN_WIDTH / 2, words_start + (word.word_img.get_height() * current_word)))
+        current_word += 1
+        if word == words_on_screen[-1]:
+            current_word = 1
 
     pygame.display.flip()
 

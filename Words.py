@@ -11,7 +11,9 @@ class Word:
         self.english = self.words[0]
         self.french = self.words[1][0]
         self.non_accent = self.words[1][1]
+        # TODO change this so it isn't always black
         self.word_img = font.render(self.english, True, (0, 0, 0))
+        self.word_img_fre = font.render(self.french, True, (0, 0, 0))
         self.position = (random.randint(0, screen_width - self.word_img.get_width()), 0)
 
     def move(self, speed):

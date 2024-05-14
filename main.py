@@ -27,13 +27,10 @@ start_screen = True
 running = True
 end_screen = False
 french_background = pygame.image.load(themes["french"]["level 0"])
+language = ""
 
 # PyGame reliant constants
 text_font = pygame.font.SysFont("Arial", 30)
-
-# Opens the vocabulary JSON dictionary up to be readable.
-with open("words.json", "r", encoding="utf-8") as vocabulary_list:
-    words = json.load(vocabulary_list)
 
 # Array of words that have been created
 words_on_screen = []
@@ -48,9 +45,20 @@ while start_screen:
     screen.fill((255, 255, 255))
     screen.blit(start_screen_text, (SCREEN_WIDTH / 2 - start_screen_text.get_width() / 2, 200))
 
+    french_button = pygame.Rect(150, 400, 100, 75)
+    pygame.draw.rect(screen, "purple", french_button)
+    german_button = pygame.Rect((SCREEN_WIDTH - 250), 400, 100, 75)
+    pygame.draw.rect(screen, "blue", german_button)
+
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONUP:
-            start_screen = False
+            mouse_position = pygame.mouse.get_pos()
+            if 150 < mouse_position[0] < 250 and 400 < mouse_position[1] < 500:
+                language = "French"
+                start_screen = False
+            if 400 < mouse_position[0] < 500 and 400 < mouse_position[1] < 500:
+                language = "German"
+                start_screen = False
         if event.type == pygame.QUIT:
             start_screen = False
             running = False
@@ -58,6 +66,10 @@ while start_screen:
     pygame.display.flip()
 
     clock.tick(60)
+
+# Opens the vocabulary JSON dictionary up to be readable.
+with open("words.json", "r", encoding="utf-8") as vocabulary_list:
+    words = json.load(vocabulary_list)[language]
 
 # The loop that is the game.
 while running:

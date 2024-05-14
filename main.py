@@ -27,6 +27,7 @@ start_screen = True
 running = True
 end_screen = False
 french_background = pygame.image.load(themes["french"]["level 0"])
+catacombs_background = pygame.image.load(themes["french"]["level 50"])
 language = ""
 
 # PyGame reliant constants
@@ -104,11 +105,13 @@ while running:
         if str(correct_answers)[-1] == "9":
             safe_to_raise_speed = True
 
-    if correct_answers < 50:
+    # TODO this level needs to be checked to see what's fair. There is a text color problem
+    # TODO make a way for the themes.json to make the background images maybe, or another .py file with an object maybe
+    if correct_answers < 10:
         screen.blit(french_background, (0, 0))
     else:
         # TODO add correct image
-        screen.fill((255, 255, 255))
+        screen.blit(catacombs_background, (0, 0))
 
     # This puts the answer text on the screen
     answer_text_img = text_font.render(answer_text, True, (0, 0, 0))

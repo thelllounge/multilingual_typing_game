@@ -1,6 +1,7 @@
 import pygame
 import json
 import Words
+import themes
 
 # Various constants that don't rely on PyGame being initialized
 SCREEN_WIDTH = 650
@@ -15,10 +16,6 @@ safe_to_raise_speed = False
 answer_text = ""
 correct_answers = 0
 
-# Opens backgrounds
-with open("themes.json", "r") as themes_collection:
-    themes = json.load(themes_collection)
-
 # General PyGame things
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -26,8 +23,7 @@ clock = pygame.time.Clock()
 start_screen = True
 running = True
 end_screen = False
-french_background = pygame.image.load(themes["french"]["level 0"])
-catacombs_background = pygame.image.load(themes["french"]["level 50"])
+
 language = ""
 
 # PyGame reliant constants
@@ -106,12 +102,13 @@ while running:
             safe_to_raise_speed = True
 
     # TODO this level needs to be checked to see what's fair. There is a text color problem
-    # TODO make a way for the themes.json to make the background images maybe, or another .py file with an object maybe
-    if correct_answers < 10:
-        screen.blit(french_background, (0, 0))
+    if 0 <= correct_answers < 10:
+        screen.blit(themes.load_theme(language, "first"), (0, 0))
     else:
-        # TODO add correct image
-        screen.blit(catacombs_background, (0, 0))
+        # TODO this doesn't work to change the color of words_on_screen
+        for word in words_on_screen:
+            word.font_color = (255, 255, 255)
+        screen.blit(themes.load_theme(language, "second"), (0, 0))
 
     # This puts the answer text on the screen
     answer_text_img = text_font.render(answer_text, True, (0, 0, 0))

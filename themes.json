@@ -1,6 +1,6 @@
 {
-  "french": {
-    "level 0": "backgrounds/Paris Finished.png",
-    "level 50": "backgrounds/Catacombs unfinished.png"
+  "French": {
+    "first": "backgrounds/Paris Finished.png",
+    "second": "backgrounds/Catacombs unfinished.png"
   }
 }

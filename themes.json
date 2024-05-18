@@ -2,5 +2,11 @@
   "French": {
     "first": "backgrounds/Paris Finished.png",
     "second": "backgrounds/Catacombs unfinished.png"
+  },
+
+  "German": {
+    "first": "backgrounds/German Castle unfinished.png",
+    "second": "backgrounds/not really a background.png"
   }
 }
+

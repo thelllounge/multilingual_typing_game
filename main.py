@@ -2,11 +2,12 @@ import pygame
 import json
 import Words
 import themes
+import game_functions
 
 # Various constants that don't rely on PyGame being initialized
 SCREEN_WIDTH = 650
 SCREEN_HEIGHT = 780
-FALL_SPEED = 1
+fall_speed = 1
 
 GAME_SPEED = 4000
 TEST_SPEED = 1000
@@ -24,8 +25,6 @@ start_screen = True
 running = True
 end_screen = False
 
-language = ""
-
 # PyGame reliant constants
 text_font = pygame.font.SysFont("Arial", 30)
 
@@ -36,39 +35,17 @@ words_on_screen = []
 pygame.time.set_timer(ADD_WORD_EVENT, GAME_SPEED)
 
 # TODO find a way to loop this and have a start and end screen
+
+language = game_functions.language_select(text_font, screen, SCREEN_WIDTH, clock)
+
 # Start screen should include things like language pick, difficulty, etc.
-while start_screen:
-    start_screen_text = text_font.render("Are you ready?", True, (0,0,0))
-    screen.fill((255, 255, 255))
-    screen.blit(start_screen_text, (SCREEN_WIDTH / 2 - start_screen_text.get_width() / 2, 200))
-
-    french_button = pygame.Rect(150, 400, 100, 75)
-    pygame.draw.rect(screen, "purple", french_button)
-    german_button = pygame.Rect((SCREEN_WIDTH - 250), 400, 100, 75)
-    pygame.draw.rect(screen, "blue", german_button)
-
-    for event in pygame.event.get():
-        if event.type == pygame.MOUSEBUTTONUP:
-            mouse_position = pygame.mouse.get_pos()
-            if 150 < mouse_position[0] < 250 and 400 < mouse_position[1] < 500:
-                language = "French"
-                start_screen = False
-            if 400 < mouse_position[0] < 500 and 400 < mouse_position[1] < 500:
-                language = "German"
-                start_screen = False
-        if event.type == pygame.QUIT:
-            start_screen = False
-            running = False
-
-    pygame.display.flip()
-
-    clock.tick(60)
 
 # Opens the vocabulary JSON dictionary up to be readable.
 with open("words.json", "r", encoding="utf-8") as vocabulary_list:
     words = json.load(vocabulary_list)[language]
 
 # The loop that is the game.
+game_functions.initiate()
 while running:
     for event in pygame.event.get():
         # This sees the event on a timer and adds a word to the words_on_screen array
@@ -96,7 +73,7 @@ while running:
         # Speeds up fall as game goes on
         # TODO mess around with speed to find good levels
         if safe_to_raise_speed and correct_answers % 15 == 0:
-            FALL_SPEED += .5
+            fall_speed += .5
             safe_to_raise_speed = False
         if str(correct_answers)[-1] == "9":
             safe_to_raise_speed = True
@@ -123,7 +100,10 @@ while running:
         if word.position[1] >= 540:
             running = False
             end_screen = True
-        word.move(FALL_SPEED)
+            # TODO this won't be here exactly later. It is just to test if it works now
+            print(fall_speed, correct_answers, language)
+            game_functions.initiate()
+        word.move(fall_speed)
 
     pygame.display.flip()
 

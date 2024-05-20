@@ -20,11 +20,12 @@ def language_select(text_font, screen, SCREEN_WIDTH, clock):
         pygame.draw.rect(screen, "blue", german_button)
 
         for event in pygame.event.get():
+            # TODO make a button class. USE COLLIDEPOINT
             if event.type == pygame.MOUSEBUTTONUP:
                 mouse_position = pygame.mouse.get_pos()
-                if 150 < mouse_position[0] < 250 and 400 < mouse_position[1] < 500:
+                if pygame.Rect.collidepoint(french_button, mouse_position):
                     return "French"
-                if 400 < mouse_position[0] < 500 and 400 < mouse_position[1] < 500:
+                if pygame.Rect.collidepoint(german_button, mouse_position):
                     return "German"
             if event.type == pygame.QUIT:
                 loop = False
@@ -58,12 +59,18 @@ def game_over_screen(word_list, screen, text_font, SCREEN_WIDTH, correct_answers
     while loop:
         screen.fill((150, 150, 150))
 
+        # TODO make a button class first. Makes this much easier I think.
+        # restart_button = pygame.Rect(50, 50, SCREEN_WIDTH - 100, 100)
+        # pygame.draw.rect(screen, "black", restart_button)
+        # restart_text = text_font.render("Play again?", True, "white")
+        # restart_button.blit(restart_text, (restart_button.width / 2 - restart_text.get_width() / 2, restart_button.height / 2 - restart_text.get_height() / 2))
+
         words_start = 400
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 loop = False
-        final_score = text_font.render(f"Final Score:", True, (255, 255, 255))
+        final_score = text_font.render("Final Score:", True, (255, 255, 255))
         score_number = text_font.render(f"{correct_answers}", True, (255, 255, 255))
 
         screen.blit(final_score, (SCREEN_WIDTH / 2 - final_score.get_width() / 2, 300))

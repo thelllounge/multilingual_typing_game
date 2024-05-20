@@ -1,4 +1,9 @@
 import pygame
+import Buttons
+
+
+def trial_function():
+    print("Hello")
 
 
 def initiate():
@@ -14,6 +19,10 @@ def language_select(text_font, screen, SCREEN_WIDTH, clock):
         screen.fill((255, 255, 255))
         screen.blit(start_screen_text, (SCREEN_WIDTH / 2 - start_screen_text.get_width() / 2, 200))
 
+        # TODO trial stuff
+        trial = Buttons.Button((10, 10, 100, 100), "purple", text_font, "click me", trial_function)
+        trial.draw_to_screen(screen)
+
         french_button = pygame.Rect(150, 400, 100, 75)
         pygame.draw.rect(screen, "purple", french_button)
         german_button = pygame.Rect((SCREEN_WIDTH - 250), 400, 100, 75)
@@ -23,6 +32,7 @@ def language_select(text_font, screen, SCREEN_WIDTH, clock):
             # TODO make a button class. USE COLLIDEPOINT
             if event.type == pygame.MOUSEBUTTONUP:
                 mouse_position = pygame.mouse.get_pos()
+                trial.get_event(event)
                 if pygame.Rect.collidepoint(french_button, mouse_position):
                     return "French"
                 if pygame.Rect.collidepoint(german_button, mouse_position):

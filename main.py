@@ -4,13 +4,11 @@ import Words
 import themes
 import game_functions
 
-# Various constants that don't rely on PyGame being initialized
+# Various variables
 SCREEN_WIDTH = 650
 SCREEN_HEIGHT = 780
 fall_speed = 1
-
 game_speed = 4000
-TEST_SPEED = 1000
 ADD_WORD_EVENT = pygame.event.custom_type()
 safe_to_raise_speed = False
 
@@ -33,21 +31,27 @@ text_font = pygame.font.SysFont("Arial", 30)
 # Array of words that have been created
 words_on_screen = []
 
-# TODO This needs to move when I figure out how to do a start screen
-pygame.time.set_timer(ADD_WORD_EVENT, game_speed)
 
-# TODO find a way to loop this and have a start and end screen
+# TODO maybe this doesn't need the set_timer?
+# TODO maybe this doesn't need to happen before the loop if no timer
+# TODO maybe this can include language_select
+def initiate():
+    global fall_speed, correct_answers, words_on_screen, game_speed
+    fall_speed = 1
+    correct_answers = 0
+    game_speed = 4000
+    words_on_screen = []
+    pygame.time.set_timer(ADD_WORD_EVENT, game_speed)
+
 
 language = game_functions.language_select(text_font, screen, SCREEN_WIDTH, clock)
-
-# Start screen should include things like language pick, difficulty, etc.
 
 # Opens the vocabulary JSON dictionary up to be readable.
 with open("words.json", "r", encoding="utf-8") as vocabulary_list:
     words = json.load(vocabulary_list)[language]
 
 # The loop that is the game.
-game_functions.initiate()
+initiate()
 while running:
     for event in pygame.event.get():
         # This sees the event on a timer and adds a word to the words_on_screen array
@@ -70,7 +74,6 @@ while running:
                 words_on_screen.pop(words_on_screen.index(word))
                 game_speed -= 75
                 pygame.time.set_timer(ADD_WORD_EVENT, game_speed)
-                print(f"game speed = {game_speed} fall speed = {fall_speed}")
         # Speeds up fall as game goes on
         # TODO mess around with speed to find good levels
         if safe_to_raise_speed and correct_answers % 15 == 0:
@@ -86,13 +89,13 @@ while running:
         falling_word_color = (255, 255, 255)
         screen.blit(themes.load_theme(language, "second"), (0, 0))
 
-    if not game_functions.blit_words_on_screen(words_on_screen, text_font, answer_text, screen, SCREEN_WIDTH, correct_answers):
-        running = False
+    if not game_functions.blit_words_on_screen(words_on_screen, text_font, answer_text, screen, SCREEN_WIDTH, correct_answers, fall_speed, initiate):
+        language = game_functions.language_select(text_font, screen, SCREEN_WIDTH, clock)
+        with open("words.json", "r", encoding="utf-8") as vocabulary_list:
+            words = json.load(vocabulary_list)[language]
 
     pygame.display.flip()
 
     clock.tick(60)
-
-game_functions.game_over_screen(words_on_screen, screen, text_font, SCREEN_WIDTH, correct_answers)
 
 pygame.quit()
